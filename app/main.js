@@ -1,19 +1,19 @@
 import { Cube } from './models/cube.js';
-import { SpaceRenderer } from './models/space-renderer.js';
 import { Space } from './models/space.js';
-import { CameraDefinitions } from './definitions/camera-definitions.js';
-import { LightDefinitions } from './definitions/light-definitions.js';
-import { SceneDefinitions } from './definitions/scene-definitions.js';
+import { Floor } from './models/floor.js';
+import { CameraDefinitions } from './definitions/camera.definitions.js';
+import { LightDefinitions } from './definitions/light.definitions.js';
+import { SceneDefinitions } from './definitions/scene.definitions.js';
+import { RendererDefinitions } from './definitions/renderer.definitions';
 
 export class Main {
     init() {
-        var defaultCamera = CameraDefinitions.getBaseCamera();
-        var defaultScene = SceneDefinitions.getBaseScene();
-        var defaultLight = LightDefinitions.getBaseLight();
+        var camera = CameraDefinitions.getBaseCamera();
+        var debugCamera = CameraDefinitions.getDebugCamera();
+        var scene = SceneDefinitions.getBaseScene();
+        var renderer = RendererDefinitions.getBaseRenderer();
 
-        this.space = new Space(defaultCamera, defaultScene, defaultLight);
-        this.spaceRenderer = new SpaceRenderer(this.space);
-        this.spaceRenderer.run();
+        this.space = new Space(camera, scene, debugCamera, renderer);
 
         this.initialSpace();
     }
@@ -24,7 +24,13 @@ export class Main {
             height: 100,
             depth: 100
         });
+        object.mesh.isDragable = true;
 
         this.space.addObject(object);
+
+        var floor = new Floor();
+        floor.mesh.name = 'floor';
+        this.space.addObject(floor);
+
     }
 }
